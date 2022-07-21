@@ -1,0 +1,5 @@
+# Known issues
+
+Some profiles commit hundreds of times a second which can kill the consumer
+    - Potential soluitions
+      - ignore specific usernames/repos

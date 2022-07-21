@@ -70,8 +70,11 @@ if __name__=="__main__":
 
         try:
             connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
-            channel = connection.channel()
-            watch_event_api()
+            if connection.is_open:
+                channel = connection.channel()
+                watch_event_api()
+            else:
+                raise ConnectionError
         except Exception as err:
             print(f'[!] Error caught in main loop: {err}')
         finally:

@@ -3,6 +3,7 @@
 
 import logging
 import time
+import xxlimited
 from gh_consumer import GithubEventConsumer
 
 ## Consumes PushEvents to conduct trufflehog scanning against the new commits
@@ -59,3 +60,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+xxlimited

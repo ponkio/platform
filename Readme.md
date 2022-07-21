@@ -24,3 +24,11 @@ Queries the github event api for recent public events. Pushes any new PushEvent 
 
 `consumer/main.py`
 Consumes new events from rabbitmq and exectures trufflehog locally against the recent commits in the PushEvent. Data is pushed to MongoDB
+
+## Data flow
+```mermaid
+    graph LR;
+
+    a --> B;
+```
+

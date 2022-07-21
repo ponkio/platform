@@ -65,3 +65,5 @@ if __name__ == "__main__":
 
 
 #print(json.dumps(run_trufflehog(sys.argv[1])))
+
+APP_ID=platform MASTER_KEY=securesea PARSE_DASHBOARD_ALLOW_INSECURE_HTTP=1 SERVER_URL=http://localhost:1337/parse docker-compose up -d
