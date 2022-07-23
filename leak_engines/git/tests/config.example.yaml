@@ -1,0 +1,28 @@
+consumer:
+  mq: 
+    enabled: true
+    host: string
+    port: int
+
+  sqs:
+    enabled: true
+    url: string
+
+producer:
+
+  connection:
+    mq:
+      host: string
+      port: string
+    sqs:
+      url: string
+
+  sources:
+    github: 
+      enabled: true
+      apikey: string
+      host: string
+    gitlab: true
+      enabled: true
+      apikey: string
+      host: string

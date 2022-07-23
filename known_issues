@@ -3,3 +3,4 @@
 Some profiles commit hundreds of times a second which can kill the consumer
     - Potential soluitions
       - ignore specific usernames/repos
+Error handling on the trufflehog command is lost during execution

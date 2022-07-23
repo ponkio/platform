@@ -2,13 +2,12 @@ import pika
 from pika.exchange_type import ExchangeType
 import logging
 import functools
-import GHEventHandler
+from git_le_cli.Commands.Consumer.MQEventHandler import MQEventHandler
 
-LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
-              '-35s %(lineno) -5d: %(message)s')
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("git_le_cli")
 
-class GithubEventConsumer(object):
+
+class MQ_consumer(object):
     """This is an example consumer that will handle unexpected interactions
     with RabbitMQ such as channel and connection closures.
 
@@ -45,7 +44,7 @@ class GithubEventConsumer(object):
         # In production, experiment with higher prefetch values
         # for higher consumer throughput
         self._prefetch_count = 1
-        self._handler = GHEventHandler.EventHandler()
+        self._handler = MQEventHandler()
 
     def connect(self):
         """This method connects to RabbitMQ, returning the connection handle.
@@ -313,7 +312,7 @@ class GithubEventConsumer(object):
         LOGGER.info('Received message # %s from %s: %s',
                     basic_deliver.delivery_tag, properties.app_id, body)
         self.acknowledge_message(basic_deliver.delivery_tag)
-        
+        print(body)
         self._handler.handle_event(body)
         
 
@@ -390,42 +389,3 @@ class GithubEventConsumer(object):
             else:
                 self._connection.ioloop.stop()
             LOGGER.info('Stopped')
-
-
-class ReconnectingExampleConsumer(object):
-    """This is an example consumer that will reconnect if the nested
-    ExampleConsumer indicates that a reconnect is necessary.
-
-    """
-
-    def __init__(self, amqp_url):
-        self._reconnect_delay = 0
-        self._amqp_url = amqp_url
-        self._consumer = ExampleConsumer(self._amqp_url)
-
-    def run(self):
-        while True:
-            try:
-                self._consumer.run()
-            except KeyboardInterrupt:
-                self._consumer.stop()
-                break
-            self._maybe_reconnect()
-
-    def _maybe_reconnect(self):
-        if self._consumer.should_reconnect:
-            self._consumer.stop()
-            reconnect_delay = self._get_reconnect_delay()
-            LOGGER.info('Reconnecting after %d seconds', reconnect_delay)
-            time.sleep(reconnect_delay)
-            self._consumer = ExampleConsumer(self._amqp_url)
-
-    def _get_reconnect_delay(self):
-        if self._consumer.was_consuming:
-            self._reconnect_delay = 0
-        else:
-            self._reconnect_delay += 1
-        if self._reconnect_delay > 30:
-            self._reconnect_delay = 30
-        return self._reconnect_delay
-

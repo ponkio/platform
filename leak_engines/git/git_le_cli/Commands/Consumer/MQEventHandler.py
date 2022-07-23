@@ -8,11 +8,10 @@ import logging
 from time import sleep
 import uuid
 
-LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
-              '-35s %(lineno) -5d: %(message)s')
-LOGGER = logging.getLogger(__name__)
 
-class EventHandler:
+LOGGER = logging.getLogger("git_le_cli")
+
+class MQEventHandler:
     def __init__(self):
         
         self._mongo = pymongo.MongoClient('mongodb://localhost:27017/')

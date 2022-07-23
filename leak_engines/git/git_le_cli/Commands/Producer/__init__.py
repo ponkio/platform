@@ -1,4 +1,6 @@
-## Event 
+import logging
+
+logger = logging.getLogger('git_le_cli')
 
 from github import Github
 import requests
@@ -6,8 +8,10 @@ import time
 import pika 
 import json
 
+g = Github(login_or_token='5eeb2d768fb754b00f81',password='b58eddd24f4394a069b9d16a4efb681c25699930', per_page=100)
+base_api_url = 'https://api.github.com'
 ## Watches https://api.github.com/events for new pushEvents, forwards new events to rabbitmq
-def handle_push_event(event):
+def handle_push_event(event, channel):
     try:
         json_event = {}
         json_event['id'] = event.id
@@ -41,7 +45,7 @@ def get_poll_limit():
     except KeyError as err:
         return 60
 
-def watch_event_api():
+def watch_event_api(channel):
     stop_watching = False
     while stop_watching != True:
         current_pol_time = get_poll_limit()
@@ -49,7 +53,7 @@ def watch_event_api():
             for event in g.get_events().get_page(1):
                 if event.type == "PushEvent":
                     print("[~] Handling PushEvent")
-                    handle_push_event(event)
+                    handle_push_event(event, channel)
                 else:
                     print("[!] Non push event")
         except Exception as err:
@@ -60,11 +64,8 @@ def watch_event_api():
     
 
 
-if __name__=="__main__":
-    
-    g = Github(login_or_token='5eeb2d768fb754b00f81',password='b58eddd24f4394a069b9d16a4efb681c25699930', per_page=100)
-    base_api_url = 'https://api.github.com'
-    
+def run(config, kwargs):
+  
     rate_limit = check_rate_limit()
     if rate_limit[0] == 'continue':
 
@@ -72,7 +73,7 @@ if __name__=="__main__":
             connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
             if connection.is_open:
                 channel = connection.channel()
-                watch_event_api()
+                watch_event_api(channel)
             else:
                 raise ConnectionError
         except Exception as err:
