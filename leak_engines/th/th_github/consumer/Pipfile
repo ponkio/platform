@@ -4,6 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pygithub = "==1.55"
+pymongo = "==4.2.0"
+pika = "==1.3.0"
 
 [dev-packages]
 
