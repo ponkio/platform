@@ -25,7 +25,10 @@ Git leak engine to monitor both historical and real time public git repos
 ## Leak Engines
 | Name | Description | Sources|
 Git | monitors historic and realtime git feeds| github, gitlab, bitbucket
-Pastebin | ||
+Pastebin
+Containers
+AMIs / other cloud images
+
     - public event feeds from git server APIs
     - github, gitlab, bitbucket
 Pastebin
