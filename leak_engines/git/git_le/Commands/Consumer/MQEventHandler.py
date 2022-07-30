@@ -7,7 +7,7 @@ import json
 import logging
 from time import sleep
 import uuid
-
+import datetime
 
 LOGGER = logging.getLogger("git_le_cli")
 
@@ -24,13 +24,14 @@ class MQEventHandler:
         go = process.poll() is None
         for result in process.stdout:
             result = json.loads(result.decode('utf-8'))
+            result['discovered_at'] = datetime.datetime.now()
             #if result.get('error') != None:
             self.__le_trufflehog_col.insert_one(result)
             print("[+]Added result to collection")
         return go
 
     def run_trufflehog(self, repo, prev_commit):
-        print(repo)
+        #print(repo)
         cmd = f"trufflehog --json git --since-commit={prev_commit} {repo}"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while self._stream_stdout(process):

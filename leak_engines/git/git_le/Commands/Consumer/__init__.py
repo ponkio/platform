@@ -1,7 +1,7 @@
 import click
 import logging
 
-from git_le_cli.Commands.Consumer.consumer_wrapper import Consumer_wrapper
+from git_le.Commands.Consumer.consumer_wrapper import Consumer_wrapper
 
 
 logger = logging.getLogger("git_le_cli")

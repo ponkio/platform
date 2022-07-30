@@ -3,7 +3,7 @@ from time import time
 
 import time
 import logging
-from git_le_cli.Commands.Consumer.mq import MQ_consumer
+from git_le.Commands.Consumer.mq import MQ_consumer
 
 LOGGER = logging.getLogger('git_le_cli')
 

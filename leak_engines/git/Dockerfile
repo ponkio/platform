@@ -13,10 +13,10 @@ FROM python:3.10-alpine
 WORKDIR /app
 
 COPY --from=builder /app /app
+COPY --from=trufflesecurity/trufflehog:3.6.11 /usr/bin/trufflehog /app/.venv/bin/trufflehog
 ADD . /app
 
 RUN adduser app -h /app -u 1000 -g 1000 -DH
 USER 1000
 
-# or
-CMD /app/.venv/bin/python git.py
+ENTRYPOINT [ "/app/.venv/bin/python", "git.py" ]

@@ -1,6 +1,6 @@
 import re
 import sys
-from git_le_cli.__main__ import main
+from git_le.__main__ import main
 
 if __name__ =='__main__':
     #sys.argv[0] = re.sub(r'(-script\.pyw[.exe)?$', '', sys.argv[0])

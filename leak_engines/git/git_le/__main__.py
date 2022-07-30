@@ -5,9 +5,9 @@ import sys
 import logging
 import yaml 
 
-from git_le_cli.Commands import *
+from git_le.Commands import *
 
-logger = logging.getLogger("git_le_cli")
+logger = logging.getLogger("git_le")
 
 class Config(object):
     def _check_config(self, config_file):
@@ -34,11 +34,13 @@ class Config(object):
 @click.option('--config', help='Path to configuration file.', envvar='GIT_LE_CONFIG', required=False)
 @click.pass_context
 def cli(ctx, config):
-
-    ctx.obj = Config(config)
+    pass
+    #ctx.obj = Config(config)
         
 
 @cli.command()
+@click.option('--type', help='Type of consumer to start running.',type=click.Choice(['mq'], case_sensitive=False), required=True)
+@click.option('--aqmp-url', help='RabbitMQ aqmp url.', envvar='GIT_LE_AQMP_URL', required=True)
 @click.pass_obj
 def producer(config, **kwargs):
     """ Generate feed of public git repos 
@@ -56,7 +58,7 @@ def consumer(config, **kwargs):
     
     """
     #print(config)
-    config = config.config
+    config = None
     try:
         Consumer.run(config, kwargs)
     except Exception as err:
@@ -67,8 +69,8 @@ def main():
     if not logger.handlers:
         st_handler = logging.StreamHandler()
 
-        st_handler.setFormatter(logging.Formatter('%(asctime)s [%levelname)-4s][%(module)s.%(funcName)s%(arg)s]: %(message)s'))
-        logger.addHandler(st_handler)
-        logger.setLevel(logging.ERROR)
+        #st_handler.setFormatter(logging.Formatter('%(asctime)s [%levelname)-4s][%(module)s.%(funcName)s%(arg)s]: %(message)s'))
+        #logger.addHandler(st_handler)
+        logger.setLevel(logging.INFO)
         
     cli()

@@ -19,4 +19,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-git_le = "git_le_cli.__main__:main"
+git_le = "git_le.__main__:main"

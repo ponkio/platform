@@ -1,15 +1,17 @@
 import logging
 
-logger = logging.getLogger('git_le_cli')
 
 from github import Github
 import requests
 import time 
 import pika 
 import json
+import click 
 
 g = Github(login_or_token='5eeb2d768fb754b00f81',password='b58eddd24f4394a069b9d16a4efb681c25699930', per_page=100)
 base_api_url = 'https://api.github.com'
+
+logger = logging.getLogger("git_le")
 ## Watches https://api.github.com/events for new pushEvents, forwards new events to rabbitmq
 def handle_push_event(event, channel):
     try:
@@ -24,7 +26,7 @@ def handle_push_event(event, channel):
         channel.basic_publish(exchange='ssp', routing_key='Push', body=json.dumps(json_event))
         print("[+] Event published")
     except Exception as err:
-        print(f"[!] Unable to push event to rabbitmq: {err}")
+        logger.error(f"[!] Unable to push event to rabbitmq: {err}")
 
 
 def check_rate_limit():
@@ -55,9 +57,9 @@ def watch_event_api(channel):
                     print("[~] Handling PushEvent")
                     handle_push_event(event, channel)
                 else:
-                    print("[!] Non push event")
+                    logger.info("[!] Non push event")
         except Exception as err:
-            print(err)
+            logger.error(err)
             stop_watching = True
         print("[~] Waiting for next poll")
         time.sleep(current_pol_time)
@@ -66,19 +68,22 @@ def watch_event_api(channel):
 
 def run(config, kwargs):
   
-    rate_limit = check_rate_limit()
-    if rate_limit[0] == 'continue':
+    if kwargs.get('type') == 'mq':
+        rate_limit = check_rate_limit()
+        if rate_limit[0] == 'continue':
 
-        try:
-            connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', pika.PlainCredentials('guest', 'guest')))
-            if connection.is_open:
-                channel = connection.channel()
-                watch_event_api(channel)
-            else:
-                raise ConnectionError
-        except Exception as err:
-            print(f'[!] Error caught in main loop: {err}')
-        finally:
-            connection.close()
+            try:
+                connection = pika.BlockingConnection(pika.URLParameters(kwargs.get('aqmp_url')))
+                if connection.is_open:
+                    channel = connection.channel()
+                    watch_event_api(channel)
+                else:
+                    raise ConnectionError
+            except Exception as err:
+                logger.error(f'[!] Error caught in main loop: {err}')
+            finally:
+                connection.close()
+        else:
+            logger.warning(f'[!] Rate limit is exceeded please wait {rate_limit[1]:.2f}s')
     else:
-        print(f'[!] Rate limit is exceeded please wait {rate_limit[1]:.2f}s')
+        click.echo('[!] Unsupported producer type')

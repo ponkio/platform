@@ -2,7 +2,7 @@ import pika
 from pika.exchange_type import ExchangeType
 import logging
 import functools
-from git_le_cli.Commands.Consumer.MQEventHandler import MQEventHandler
+from git_le.Commands.Consumer.MQEventHandler import MQEventHandler
 
 LOGGER = logging.getLogger("git_le_cli")
 
@@ -312,7 +312,6 @@ class MQ_consumer(object):
         LOGGER.info('Received message # %s from %s: %s',
                     basic_deliver.delivery_tag, properties.app_id, body)
         self.acknowledge_message(basic_deliver.delivery_tag)
-        print(body)
         self._handler.handle_event(body)
         
 
