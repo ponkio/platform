@@ -1,4 +1,9 @@
 consumer:
-  mq: 
-    aqmp_url: amqp://guest:guest@localhost:5672/%2F
+  type: git
+  source:
+    mq: 
+      aqmp_url: amqp://guest:guest@localhost:5672/%2F
+    
+  type: pastebin
+  
   

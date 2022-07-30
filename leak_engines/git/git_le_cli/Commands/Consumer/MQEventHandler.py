@@ -12,9 +12,9 @@ import uuid
 LOGGER = logging.getLogger("git_le_cli")
 
 class MQEventHandler:
-    def __init__(self):
+    def __init__(self, mongo_url):
         
-        self._mongo = pymongo.MongoClient('mongodb://localhost:27017/')
+        self._mongo = pymongo.MongoClient(mongo_url)
         self.__ss_plat_db = self._mongo['ss_platform']
         self.__le_trufflehog_col = self.__ss_plat_db['le_trufflehog']
 

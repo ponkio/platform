@@ -31,7 +31,7 @@ class Config(object):
             self.config = config_file
 
 @click.group()
-@click.option('--config', help='Path to configuration file.', envvar='GIT_LE_CONFIG', required=True)
+@click.option('--config', help='Path to configuration file.', envvar='GIT_LE_CONFIG', required=False)
 @click.pass_context
 def cli(ctx, config):
 
@@ -47,6 +47,9 @@ def producer(config, **kwargs):
     Producer.run(config, kwargs)
 
 @cli.command()
+@click.option('--type', help='Type of consumer to start running.',type=click.Choice(['mq', 'lambda'], case_sensitive=False), required=True)
+@click.option('--aqmp-url', help='RabbitMQ aqmp url.', envvar='GIT_LE_AQMP_URL', required=True)
+@click.option('--mongo-url', help='MongoDB url. ', envvar='GIT_LE_MONGO_URL', required=True)
 @click.pass_obj
 def consumer(config, **kwargs):
     """ Consume a feed of public repos and execute secret detection on each.

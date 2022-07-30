@@ -25,7 +25,7 @@ class MQ_consumer(object):
     QUEUE = 'PushEventQueue'
     ROUTING_KEY = 'Push'
 
-    def __init__(self, amqp_url):
+    def __init__(self, amqp_url, mongo_url):
         """Create a new instance of the consumer class, passing in the AMQP
         URL used to connect to RabbitMQ.
 
@@ -44,7 +44,7 @@ class MQ_consumer(object):
         # In production, experiment with higher prefetch values
         # for higher consumer throughput
         self._prefetch_count = 1
-        self._handler = MQEventHandler()
+        self._handler = MQEventHandler(mongo_url)
 
     def connect(self):
         """This method connects to RabbitMQ, returning the connection handle.
