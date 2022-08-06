@@ -19,4 +19,4 @@ ADD . /app
 RUN adduser app -h /app -u 1000 -g 1000 -DH
 USER 1000
 
-ENTRYPOINT [ "/app/.venv/bin/python", "git.py" ]
+ENTRYPOINT [ "/app/.venv/bin/python", "cli.py" ]
