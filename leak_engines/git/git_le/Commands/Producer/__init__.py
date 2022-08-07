@@ -7,8 +7,9 @@ import time
 import pika 
 import json
 import click 
+import os 
 
-g = Github(login_or_token='5eeb2d768fb754b00f81',password='b58eddd24f4394a069b9d16a4efb681c25699930', per_page=100)
+g = Github(login_or_token=os.environ['GH_TOKEN'], password=os.environ['GH_API_KEY'], per_page=100)
 base_api_url = 'https://api.github.com'
 
 logger = logging.getLogger("git_le")
@@ -73,7 +74,7 @@ def run(config, kwargs):
         if rate_limit[0] == 'continue':
 
             try:
-                connection = pika.BlockingConnection(pika.URLParameters(kwargs.get('aqmp_url')))
+                connection = pika.BlockingConnection(pika.URLParameters(os.environ['AQMP_URL']))
                 if connection.is_open:
                     channel = connection.channel()
                     watch_event_api(channel)

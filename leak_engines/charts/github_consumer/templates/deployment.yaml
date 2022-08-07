@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "github_producer.fullname" . }}
+  name: {{ include "github_consumer.fullname" . }}
   labels:
-    {{- include "github_producer.labels" . | nindent 4 }}
+    {{- include "github_consumer.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "github_producer.selectorLabels" . | nindent 6 }}
+      {{- include "github_consumer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "github_producer.selectorLabels" . | nindent 8 }}
+        {{- include "github_consumer.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "github_producer.serviceAccountName" . }}
+      serviceAccountName: {{ include "github_consumer.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -35,23 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          args: ['producer', '--type=mq']
-          env:
-            - name: GH_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "github_producer.fullname" . }}
-                  key: GH_TOKEN
-            - name: GH_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "github_producer.fullname" . }}
-                  key: GH_API_KEY
-            - name: AQMP_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "github_producer.fullname" . }}
-                  key: AQMP_URL    
+          args: ['consumer', '--type=mq']
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

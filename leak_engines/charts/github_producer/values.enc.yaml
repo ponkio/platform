@@ -1,0 +1,85 @@
+# Default values for github_producer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+    repository: registry.gitlab.com/securesea/leakengine
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: dev
+## See securesea/k8s/gitlab_secret.yaml
+imagePullSecrets:
+    - name: regcreds
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+podAnnotations: {}
+podSecurityContext: {}
+# fsGroup: 2000
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+secrets:
+    github_token: ENC[AES256_GCM,data:qqgZS8McpaSVow2v/O62+HVijOQ=,iv:cFM0QaVOLinh7liCtI4w9eWAUNuYG53vZLWWsdMAkZc=,tag:TdHUYi/660Gdy4YEt7IUpA==,type:str]
+    github_api_key: ENC[AES256_GCM,data:cD59doG/p9grmh6gTg1VX9NWRZKROHFo5VOyVWQWzsXdu1KeH+Cgsw==,iv:I1sTzk7k2WfZUrt0SWVgr1WaV+dls6VVON5lkhHkMhw=,tag:7yT4usBfTUSBKtiFQrPf3g==,type:str]
+    aqmp_url: ENC[AES256_GCM,data:8HL2fRi/hZIxcTyxcHKpqK3NOUVs96KPNCjgl+a1yCZhciTEQNGU0IKtGgd15E8iPLLRG8+zwqqZicR35VSSXL1ApdTdyxgA,iv:nItNYXrsvhebJoD4YRfstVw41e1WEb6/4HgQMvHtBTk=,tag:t62M37IyQoJSvP4Y1ruA/w==,type:str]
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+nodeSelector: {}
+tolerations: []
+affinity: {}
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age: []
+    lastmodified: "2022-08-07T01:21:06Z"
+    mac: ENC[AES256_GCM,data:qtcA4yB1LLX591UkR8PwBBGgvmQy8IrNPY0pLN/W0LEgXGfFJAIcZwvpOZ44lWEf414z5TWo1XvqHVe20qSXDPpBEUJO2hYDgB9g01nppCWchYHNzXoX8lfFR8V/Yo/XB3Py/5+0jx8YVsjQeX0kHsmipR0J9REXNYY0Fe+EvH0=,iv:dzRaBItQbYEUCBV8xImjBqTy3jV5jdpds19LBRf8soQ=,tag:RY2/tZ5/fpe4uG+qhyvOkA==,type:str]
+    pgp:
+        - created_at: "2022-08-07T01:21:06Z"
+          enc: |
+            -----BEGIN PGP MESSAGE-----
+
+            hQGMA0j2Qzcv5sM0AQv+KLtGp95jE8A5FuF/RE64jsMiTPWJ/DyesY9THHTL39gY
+            5rCiyetMEkFcvZUQmeXOZB/+xwOhD8zooWX7OqhsQzNtLcv8zxDOJQyEAH7SRcoP
+            ZOsBiYZo3xMVBy2k1IOwBAwaQUhIQaIrdzIBKDD+Sjj0IGvV5D2QzHENE31Nr0z2
+            XzpNgRKSyGaBQQL8G1ieio3XpPMZOfhmMTHrDiOfxQQLEvVmAoVFJiPPQ+NrsoWm
+            g7dRO2lhGEquBVOK/MsydOE59k9Yp6PJdDhhxbyYhE0aTV3DPQGQqOTqdbQaar+T
+            9jqNjYtrnYomDt/pgcUDSF8k2ZQXxAc8lil+5RAVnI7pAY7eKiBvM7+TCd2XEYmQ
+            XihYxr7dvrDsmywA0Y/LXAEs/RO0Ko2z7S6fwqgkmWEKHJ/viBo/gF5fnQAp1cL1
+            ANejo6sjtAk4aiFC6RYg03r/6OROfH6ixgtWzj7UhBj4321ZVJpUT4pxWXt8LfHf
+            jD4K0/MdRtM8copgMkwi0l4Ba3N67Y6go/aT7rb5SSknJ0Qp8/jCe/UXbM1Bpbq6
+            nh0YZ1bdNemE5Xkg+cBt5Joz8oP2ANvP5kuKAeKA8Y9yuR8WOgSHH5so5Wy216AW
+            QPSmSAXUcfR3a5GsAcCh
+            =hQqn
+            -----END PGP MESSAGE-----
+          fp: 242731380601E5D6778F1F3C20575541CAE93C5E
+    encrypted_regex: ^(secrets)$
+    version: 3.7.3

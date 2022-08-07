@@ -40,7 +40,7 @@ def cli(ctx, config):
 
 @cli.command()
 @click.option('--type', help='Type of consumer to start running.',type=click.Choice(['mq'], case_sensitive=False), required=True)
-@click.option('--aqmp-url', help='RabbitMQ aqmp url.', envvar='GIT_LE_AQMP_URL', required=True)
+@click.option('--aqmp-url', help='RabbitMQ aqmp url.', envvar='GIT_LE_AQMP_URL', required=False)
 @click.pass_obj
 def producer(config, **kwargs):
     """ Generate feed of public git repos 
@@ -50,8 +50,8 @@ def producer(config, **kwargs):
 
 @cli.command()
 @click.option('--type', help='Type of consumer to start running.',type=click.Choice(['mq', 'lambda'], case_sensitive=False), required=True)
-@click.option('--aqmp-url', help='RabbitMQ aqmp url.', envvar='GIT_LE_AQMP_URL', required=True)
-@click.option('--mongo-url', help='MongoDB url. ', envvar='GIT_LE_MONGO_URL', required=True)
+@click.option('--aqmp-url', help='RabbitMQ aqmp url.', envvar='GIT_LE_AQMP_URL', required=False)
+@click.option('--mongo-url', help='MongoDB url. ', envvar='GIT_LE_MONGO_URL', required=False)
 @click.pass_obj
 def consumer(config, **kwargs):
     """ Consume a feed of public repos and execute secret detection on each.
