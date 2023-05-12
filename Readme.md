@@ -33,10 +33,8 @@ AMIs / other cloud images
     - github, gitlab, bitbucket
 Pastebin
     - 
-## Data flow
-```mermaid
-    graph LR;
+## Architecture
+### Initial:
+![](arch/MVP_architecture.png)
 
-    a --> B;
-```
 
